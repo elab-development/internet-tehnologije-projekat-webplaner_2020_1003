@@ -9,6 +9,9 @@ class PlanerType extends Model
 {
     
     use HasFactory;
+
+    protected $fillable =['name'];
+
     public function types(){
         
         return $this->hasMany(Planer::class);

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlanerController;
+use App\Http\Controllers\PlanerTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/users',[UserController::class, 'index']);
 Route::get('/users/{id}',[UserController::class, 'show']);
+
+
+Route::get('/planer-types',[PlanerTypeController::class, 'index']);
+Route::post('/planer-types',[PlanerTypeController::class, 'store']);
+Route::put('/planer-types/{id}',[PlanerTypeController::class, 'update']);
+Route::delete('/planer-types/{id}',[PlanerTypeController::class, 'destroy']);
 
 Route::resource('planers', PlanerController::class);
 
