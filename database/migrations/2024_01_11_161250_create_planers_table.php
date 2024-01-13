@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('planers', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('description');
+            $table->decimal('price');
+            $table->foreignId("planer_type_id");
             $table->timestamps();
         });
     }

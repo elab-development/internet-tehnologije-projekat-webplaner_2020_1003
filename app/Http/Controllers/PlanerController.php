@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PlanerCollection;
-use App\Http\Resources\PlanerResource;
+use App\Models\User;
 use App\Models\Planer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\PlanerResource;
+use App\Http\Resources\PlanerCollection;
 use Illuminate\Support\Facades\Validator;
 
 
