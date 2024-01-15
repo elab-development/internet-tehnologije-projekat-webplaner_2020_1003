@@ -32,7 +32,7 @@ class PlanerTypeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|unique:planer_types|max:255'
         ]);
 
         if ($validator->fails())
@@ -42,7 +42,7 @@ class PlanerTypeController extends Controller
             'name' => $request->name
         ]);
 
-        return response()->json(['Tip planera je uspešno dodat.', new PlanerTypeResource($planerType)]);
+        return response()->json(['message' => 'Tip planera je uspešno dodat.', "item" => new PlanerTypeResource($planerType)]);
     }
 
     /**
@@ -50,7 +50,13 @@ class PlanerTypeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $planerType = PlanerType::find($id);
+
+        if (empty($planerType)) {
+            return response()->json(['message' => 'Planer tip ne postoji.'], 404);
+        }
+
+        return new PlanerTypeResource($planerType);
     }
 
     /**
@@ -69,7 +75,7 @@ class PlanerTypeController extends Controller
         $planerType = PlanerType::find($id);
 
         if (empty($planerType)) {
-            return response()->json('Tip planera nije pronadjen.');
+            return response()->json(['Tip planera nije pronadjen.'], 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -92,11 +98,12 @@ class PlanerTypeController extends Controller
     public function destroy(string $id)
     {
         $planerType = PlanerType::find($id);
+
         if ($planerType) {
             $planerType->delete();
             return response()->json(['Tip planera je uspesno obrisan.']);
         } else {
-            return response()->json(['Tip planera nije pronadjen.']);
+            return response()->json(['Tip planera nije pronadjen.'], 404);
         }
     }
 }

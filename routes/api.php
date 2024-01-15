@@ -26,6 +26,7 @@ Route::get('/users/{id}',[UserController::class, 'show']);
 
 
 Route::get('/planer-types',[PlanerTypeController::class, 'index']);
+Route::get('/planer-types/{id}',[PlanerTypeController::class, 'show']);
 Route::post('/planer-types',[PlanerTypeController::class, 'store']);
 Route::put('/planer-types/{id}',[PlanerTypeController::class, 'update']);
 Route::delete('/planer-types/{id}',[PlanerTypeController::class, 'destroy']);
