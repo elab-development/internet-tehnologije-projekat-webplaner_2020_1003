@@ -17,7 +17,11 @@ class PlanerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->unique()->word(),
+            'description' => $this->faker->text(),
+            'price' => rand(10,100),
+            'user_id' => rand(1,5),
+            'planer_type_id' => rand(1,10)
         ];
     }
 }
