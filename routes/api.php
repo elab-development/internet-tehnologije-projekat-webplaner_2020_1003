@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PlanerController;
 use App\Http\Controllers\PlanerTypeController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------

@@ -12,7 +12,7 @@ class Planer extends Model
 
     protected $fillable = ['name', 'description', 'price', 'planer_type_id', 'user_id'];
 
-    public function type()
+    public function planerType()
     {
         return $this->belongsTo(PlanerType::class);
     }
