@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlanerController;
 use App\Http\Controllers\PlanerTypeController;
-use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
+use App\Http\Resources\UserCollection;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,22 +18,25 @@ use App\Http\Controllers\SearchController;
 |
 */
 
+//Auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::post('/logout', [UserController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
     //Planer Types
-    Route::get('/planer-types', [PlanerTypeController::class, 'index']);
-    Route::get('/planer-types/{id}', [PlanerTypeController::class, 'show']);
-    Route::post('/planer-types', [PlanerTypeController::class, 'store']);
-    Route::put('/planer-types/{id}', [PlanerTypeController::class, 'update']);
-    Route::delete('/planer-types/{id}', [PlanerTypeController::class, 'destroy']);
+    Route::get('/planer-types', [PlanerTypeController::class, 'index'])->middleware('checkRole:1');;
+    Route::get('/planer-types/{id}', [PlanerTypeController::class, 'show'])->middleware('checkRole:1');;
+    Route::post('/planer-types', [PlanerTypeController::class, 'store'])->middleware('checkRole:1');;
+    Route::put('/planer-types/{id}', [PlanerTypeController::class, 'update'])->middleware('checkRole:1');;
+    Route::delete('/planer-types/{id}', [PlanerTypeController::class, 'destroy'])->middleware('checkRole:1');;
 
     //Planers
     Route::resource('planers', PlanerController::class);
+
+    //Users
+    Route::resource('/users', UserController::class)->middleware('checkRole:1');
+
 });
-
-//Users
-Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
-

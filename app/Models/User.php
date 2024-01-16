@@ -22,6 +22,7 @@ class User extends Authenticatable
         'full_name',
         'email',
         'password',
+        'role_id'
     ];
 
     /**
@@ -44,7 +45,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function planers(){
+    public function planers()
+    {
         return $this->hasMany(Planer::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function hasAnyPlaners()
+    {
+        return $this->planers()->exists();
     }
 }
