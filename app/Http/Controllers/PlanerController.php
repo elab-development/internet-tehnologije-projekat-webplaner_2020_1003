@@ -20,8 +20,7 @@ class PlanerController extends Controller
      */
     public function index()
     {
-        $planers = Planer::all();
-        return new PlanerCollection($planers);
+        return new PlanerCollection(Planer::all());
     }
 
     /**
@@ -41,10 +40,10 @@ class PlanerController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [ 
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:planers|max:255',
             'description' => 'required|string|min:5',
             'price' => 'required',
-            'planerType_id' => 'required'
+            'planerTypeId' => 'required'
         ]);
 
         if ($validator->fails())
@@ -54,7 +53,7 @@ class PlanerController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
-            'planerType_id' => $request->planerType_id,
+            'planer_type_id' => $request->planerTypeId,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -91,7 +90,7 @@ class PlanerController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'required|string|min:5',
             'price' => 'required',
-            'planerType_id' => 'required'
+            'planerTypeId' => 'required'
         ]);
 
         if ($validator->fails())
@@ -100,7 +99,7 @@ class PlanerController extends Controller
         $planer->name = $request->name;
         $planer->description = $request->description;
         $planer->price = $request->price;
-        $planer->planerType_id = $request->planerType_id;
+        $planer->planer_type_id = $request->planerTypeId;
         $planer->user_id = Auth::user()->id;
 
         $planer->save();

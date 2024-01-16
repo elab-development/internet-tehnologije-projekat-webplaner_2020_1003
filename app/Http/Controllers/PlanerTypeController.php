@@ -89,7 +89,7 @@ class PlanerTypeController extends Controller
 
         $planerType->save();
 
-        return response()->json(['Planer je uspesno izmenjen.', new PlanerTypeResource($planerType)]);
+        return response()->json(['Tip planera je uspesno izmenjen.', new PlanerTypeResource($planerType)]);
     }
 
     /**

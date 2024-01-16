@@ -2,68 +2,59 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function register(Request $request)
     {
-        $users= User::all();
-        return $users;
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|unique:users',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return  response()->json(['access_token' => $token, 'data' => new UserResource($user)]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function login(Request $request)
     {
-        //
+        $success = Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
+
+        if (!$success) {
+            return response()->json(['Neispravni podaci'], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json(['message' => 'Uspesno logovanje', 'data' => new UserResource($user), 'token' => $token]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function logout(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($user_id)
-    {
-        $user = User::find($user_id);
-        if (is_null($user))
-            return response()->json('Data not found', 404);
-        return response()->json($user);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Uspesno odjavljivanje']);
     }
 }

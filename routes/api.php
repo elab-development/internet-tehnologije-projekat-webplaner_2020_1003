@@ -17,19 +17,22 @@ use App\Http\Controllers\PlanerTypeController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('/logout', [UserController::class, 'logout']);
+
+    //Planer Types
+    Route::get('/planer-types', [PlanerTypeController::class, 'index']);
+    Route::get('/planer-types/{id}', [PlanerTypeController::class, 'show']);
+    Route::post('/planer-types', [PlanerTypeController::class, 'store']);
+    Route::put('/planer-types/{id}', [PlanerTypeController::class, 'update']);
+    Route::delete('/planer-types/{id}', [PlanerTypeController::class, 'destroy']);
+
+    //Planers
+    Route::resource('planers', PlanerController::class);
 });
 
-Route::get('/users',[UserController::class, 'index']);
-Route::get('/users/{id}',[UserController::class, 'show']);
-
-
-Route::get('/planer-types',[PlanerTypeController::class, 'index']);
-Route::get('/planer-types/{id}',[PlanerTypeController::class, 'show']);
-Route::post('/planer-types',[PlanerTypeController::class, 'store']);
-Route::put('/planer-types/{id}',[PlanerTypeController::class, 'update']);
-Route::delete('/planer-types/{id}',[PlanerTypeController::class, 'destroy']);
-
-Route::resource('planers', PlanerController::class);
+//Users
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
 
