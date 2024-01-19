@@ -54,7 +54,7 @@ class UserController extends Controller
             'role_id' => 2
         ]);
 
-        return response()->json(['Korisnik je uspešno kreiran.', new UserResource($user)]);
+        return response()->json(['message' => 'Korisnik je uspešno kreiran.', 'data' => new UserResource($user)]);
     }
 
     /**
@@ -65,12 +65,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $validator = Validator::make($request->all(), [ 
+        $validator = Validator::make($request->all(), [
             'fullName' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users,username,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id
         ]);
-        
+
 
         if ($validator->fails())
             return response()->json($validator->errors());
@@ -82,7 +82,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return response()->json(['Korisnik je uspešno izmenjen.', new UserResource($user)]);
+        return response()->json(['message' => 'Korisnik je uspešno izmenjen.', 'data' => new UserResource($user)]);
     }
 
     /**
@@ -91,15 +91,14 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-     
-     public function destroy(User $user)
-     {
-        if($user->hasAnyPlaners())
-        {   
-            return response()->json(['Korisnik ne može biti obrisan jer ima planere.']);   
+
+    public function destroy(User $user)
+    {
+        if ($user->hasAnyPlaners()) {
+            return response()->json(['message' => 'Korisnik ne može biti obrisan jer ima planere.']);
         }
 
-         $user->delete();
-         return response()->json(['Korisnik je uspešno obrisan.']);
-     }
+        $user->delete();
+        return response()->json(['message' => 'Korisnik je uspešno obrisan.']);
+    }
 }

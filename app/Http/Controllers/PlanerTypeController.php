@@ -53,7 +53,7 @@ class PlanerTypeController extends Controller
         $planerType = PlanerType::find($id);
 
         if (empty($planerType)) {
-            return response()->json(['message' => 'Planer tip ne postoji.'], 404);
+            return response()->json(['error' => 'Planer tip ne postoji.'], 404);
         }
 
         return new PlanerTypeResource($planerType);
@@ -75,7 +75,7 @@ class PlanerTypeController extends Controller
         $planerType = PlanerType::find($id);
 
         if (empty($planerType)) {
-            return response()->json(['Tip planera nije pronadjen.'], 404);
+            return response()->json(['error' => 'Tip planera nije pronadjen.'], 404);
         }
 
         $validator = Validator::make($request->all(), [
@@ -89,7 +89,7 @@ class PlanerTypeController extends Controller
 
         $planerType->save();
 
-        return response()->json(['Tip planera je uspesno izmenjen.', new PlanerTypeResource($planerType)]);
+        return response()->json(['message' => 'Tip planera je uspesno izmenjen.', 'data' => new PlanerTypeResource($planerType)]);
     }
 
     /**
@@ -100,10 +100,14 @@ class PlanerTypeController extends Controller
         $planerType = PlanerType::find($id);
 
         if ($planerType) {
+            if ($planerType->hasAnyPlaners()) {
+                return response()->json(['error' => 'Tip planera ne može biti obrisan jer ima planere.']);
+            }
+
             $planerType->delete();
-            return response()->json(['Tip planera je uspesno obrisan.']);
+            return response()->json(['message' => 'Tip planera je uspesno obrisan.']);
         } else {
-            return response()->json(['Tip planera nije pronadjen.'], 404);
+            return response()->json(['error' => 'Tip planera nije pronadjen.'], 404);
         }
     }
 }

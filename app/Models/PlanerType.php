@@ -12,8 +12,13 @@ class PlanerType extends Model
 
     protected $fillable =['name'];
 
-    public function types(){
+    public function planers(){
         
         return $this->hasMany(Planer::class);
+    }
+
+    public function hasAnyPlaners()
+    {
+        return $this->planers()->exists();
     }
 }

@@ -39,7 +39,7 @@ class PlanerController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [ 
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|unique:planers|max:255',
             'description' => 'required|string|min:5',
             'price' => 'required',
@@ -57,7 +57,7 @@ class PlanerController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
-        return response()->json(['Planer je uspesno dodat.', new PlanerResource($planer)]);
+        return response()->json(['message' => 'Planer je uspesno dodat.', 'data' => new PlanerResource($planer)]);
     }
 
     /**
@@ -87,7 +87,7 @@ class PlanerController extends Controller
     public function update(Request $request, Planer $planer)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:planers,name,' . $planer->id,
             'description' => 'required|string|min:5',
             'price' => 'required',
             'planerTypeId' => 'required'
@@ -104,7 +104,7 @@ class PlanerController extends Controller
 
         $planer->save();
 
-        return response()->json(['Planer je uspesno izmenjen.', new PlanerResource($planer)]);
+        return response()->json(['message' => 'Planer je uspesno izmenjen.', 'data' => new PlanerResource($planer)]);
     }
 
     /**
@@ -113,10 +113,10 @@ class PlanerController extends Controller
      * @param  \App\Models\Planer  $planer
      * @return \Illuminate\Http\Response
      */
-     
+
     public function destroy(Planer $planer)
     {
         $planer->delete();
-        return response()->json(['Planer je uspesno obrisan.']);
+        return response()->json(['message' => 'Planer je uspesno obrisan.']);
     }
 }
