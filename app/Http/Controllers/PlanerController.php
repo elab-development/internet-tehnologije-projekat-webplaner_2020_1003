@@ -57,14 +57,16 @@ class PlanerController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
-        return response()->json(['message' => 'Planer je uspesno dodat.', 'data' => new PlanerResource($planer)]);
+        return response()->json(['message' => 'Planer je uspešno dodat.', 'data' => new PlanerResource($planer)]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Planer $planer)
+    public function show($id)
     {
+        $planer = Planer::find($id);
+
         return new PlanerResource($planer);
     }
 
@@ -84,8 +86,14 @@ class PlanerController extends Controller
      * @param  \App\Models\Planer  $planer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Planer $planer)
+    public function update(Request $request, $id)
     {
+        $planer = Planer::find($id);
+
+        if (empty($planer)) {
+            return response()->json(['error' => 'Tip nije pronađen.'], 404);
+        }
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:planers,name,' . $planer->id,
             'description' => 'required|string|min:5',
@@ -104,7 +112,7 @@ class PlanerController extends Controller
 
         $planer->save();
 
-        return response()->json(['message' => 'Planer je uspesno izmenjen.', 'data' => new PlanerResource($planer)]);
+        return response()->json(['message' => 'Planer je uspešno izmenjen.', 'data' => new PlanerResource($planer)]);
     }
 
     /**
@@ -114,8 +122,10 @@ class PlanerController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Planer $planer)
+    public function destroy($id)
     {
+        $planer = Planer::find($id);
+
         $planer->delete();
         return response()->json(['message' => 'Planer je uspesno obrisan.']);
     }

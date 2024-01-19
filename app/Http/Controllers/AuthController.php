@@ -45,18 +45,18 @@ class AuthController extends Controller
         ]);
 
         if (!$success) {
-            return response()->json(['Neispravni podaci'], 401);
+            return response()->json(['error' => 'Neispravni podaci'], 401);
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
         $token = $user->createToken('authToken')->plainTextToken;
 
-        return response()->json(['message' => 'Uspesno logovanje', 'data' => new UserResource($user), 'token' => $token]);
+        return response()->json(['message' => 'Uspešno logovanje', 'data' => new UserResource($user), 'token' => $token]);
     }
 
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Uspesno odjavljivanje']);
+        return response()->json(['message' => 'Uspešno odjavljivanje']);
     }
 }

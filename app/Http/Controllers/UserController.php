@@ -95,7 +95,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         if ($user->hasAnyPlaners()) {
-            return response()->json(['message' => 'Korisnik ne može biti obrisan jer ima planere.']);
+            return response()->json(['error' => 'Korisnik ne može biti obrisan jer ima planere.']);
         }
 
         $user->delete();

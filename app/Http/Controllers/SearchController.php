@@ -27,7 +27,7 @@ class SearchController extends Controller
         $planers = $query->paginate($size, ['*'], 'page', $page);
 
         return response()->json([
-            'planers' => new PlanerCollection($planers),
+            'data' => new PlanerCollection($planers),
             'size' => $planers->perPage(),
             'total' => $planers->total(),
             'current_page' => $planers->currentPage(),

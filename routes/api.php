@@ -38,7 +38,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/search/planers', [SearchController::class, 'searchPlaners'])->middleware('checkRole:1,2');
 
     //Planers
-    Route::resource('planers', PlanerController::class)->middleware('checkRole:1,2');
+    Route::get('/planers', [PlanerController::class, 'index'])->middleware('checkRole:1,2');
+    Route::get('/planers/{id}', [PlanerController::class, 'show'])->middleware('checkRole:1');
+    Route::post('/planers', [PlanerController::class, 'store'])->middleware('checkRole:1');
+    Route::put('/planers/{id}', [PlanerController::class, 'update'])->middleware('checkRole:1');
+    Route::delete('/planers/{id}', [PlanerController::class, 'destroy'])->middleware('checkRole:1');
 
     //Users
     Route::resource('/users', UserController::class)->middleware('checkRole:1');
