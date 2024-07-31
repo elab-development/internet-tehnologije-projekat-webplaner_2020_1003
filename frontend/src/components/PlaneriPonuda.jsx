@@ -13,12 +13,23 @@ const PlannersSection = styled.section`
 `;
 
 const FilterSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 20px;
 `;
 
 const Select = styled.select`
   padding: 10px;
   font-size: 1em;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  font-size: 1em;
+  margin-bottom: 10px;
+  width: 200px;
 `;
 
 const PlaneriPonuda = () => {
@@ -26,6 +37,7 @@ const PlaneriPonuda = () => {
   const [filteredPlanners, setFilteredPlanners] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchPlanners = async () => {
@@ -51,15 +63,33 @@ const PlaneriPonuda = () => {
     fetchCategories();
   }, []);
 
-  const handleCategoryChange = (e) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
+  useEffect(() => {
+    filterPlanners();
+  }, [selectedCategory, searchTerm]);
 
-    if (category === '') {
-      setFilteredPlanners(planners);
-    } else {
-      setFilteredPlanners(planners.filter(planner => planner.planerType.id === parseInt(category)));
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filterPlanners = () => {
+    let filtered = planners;
+
+    if (selectedCategory) {
+      filtered = filtered.filter(planner => planner.planerType.id === parseInt(selectedCategory));
     }
+
+    if (searchTerm) {
+      filtered = filtered.filter(planner =>
+        planner.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        planner.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredPlanners(filtered);
   };
 
   return (
@@ -71,6 +101,12 @@ const PlaneriPonuda = () => {
             <option key={category.id} value={category.id}>{category.name}</option>
           ))}
         </Select>
+        <Input
+          type="text"
+          placeholder="Pretraga po nazivu ili opisu"
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+        />
       </FilterSection>
       <PlannersSection>
         {filteredPlanners.map((planner, index) => (
