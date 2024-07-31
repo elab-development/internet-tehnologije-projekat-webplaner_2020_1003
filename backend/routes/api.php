@@ -23,12 +23,13 @@ use App\Http\Resources\UserCollection;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/planers', [PlanerController::class, 'index']);
+Route::get('/planer-types', [PlanerTypeController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
     //Planer Types
-    Route::get('/planer-types', [PlanerTypeController::class, 'index'])->middleware('checkRole:1,2');
+    
     Route::get('/planer-types/{id}', [PlanerTypeController::class, 'show'])->middleware('checkRole:1');
     Route::post('/planer-types', [PlanerTypeController::class, 'store'])->middleware('checkRole:1');
     Route::put('/planer-types/{id}', [PlanerTypeController::class, 'update'])->middleware('checkRole:1');
