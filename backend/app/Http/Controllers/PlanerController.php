@@ -43,7 +43,8 @@ class PlanerController extends Controller
             'name' => 'required|string|unique:planers|max:255',
             'description' => 'required|string|min:5',
             'price' => 'required',
-            'planerTypeId' => 'required'
+            'planerTypeId' => 'required',
+            'image' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails())
@@ -54,6 +55,7 @@ class PlanerController extends Controller
             'description' => $request->description,
             'price' => $request->price,
             'planer_type_id' => $request->planerTypeId,
+            'image' => $request->image,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -98,7 +100,8 @@ class PlanerController extends Controller
             'name' => 'required|string|max:255|unique:planers,name,' . $planer->id,
             'description' => 'required|string|min:5',
             'price' => 'required',
-            'planerTypeId' => 'required'
+            'planerTypeId' => 'required',
+            'image' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails())
@@ -109,7 +112,7 @@ class PlanerController extends Controller
         $planer->price = $request->price;
         $planer->planer_type_id = $request->planerTypeId;
         $planer->user_id = Auth::user()->id;
-
+        $planer->image = $request->image;
         $planer->save();
 
         return response()->json(['message' => 'Planer je uspešno izmenjen.', 'data' => new PlanerResource($planer)]);

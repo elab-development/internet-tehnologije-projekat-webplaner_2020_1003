@@ -10,7 +10,7 @@ class Planer extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected $fillable = ['name', 'description', 'price', 'planer_type_id', 'user_id'];
+    protected $fillable = ['name', 'description', 'price', 'planer_type_id', 'user_id','image'];
 
     public function planerType()
     {
