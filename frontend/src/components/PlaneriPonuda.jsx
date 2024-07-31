@@ -32,6 +32,21 @@ const Input = styled.input`
   width: 200px;
 `;
 
+const Button = styled.button`
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #4682B4;
+  color: white;
+
+  &:hover {
+    background-color: #5A9BD3;
+  }
+`;
+
 const PlaneriPonuda = () => {
   const [planners, setPlanners] = useState([]);
   const [filteredPlanners, setFilteredPlanners] = useState([]);
@@ -64,7 +79,7 @@ const PlaneriPonuda = () => {
   }, []);
 
   useEffect(() => {
-    filterPlanners();
+    filterAndSortPlanners();
   }, [selectedCategory, searchTerm]);
 
   const handleCategoryChange = (e) => {
@@ -75,7 +90,19 @@ const PlaneriPonuda = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filterPlanners = () => {
+  const sortPlanners = (order) => {
+    const sorted = [...filteredPlanners].sort((a, b) => {
+      if (order === 'asc') {
+        return parseFloat(a.price) - parseFloat(b.price);
+      } else if (order === 'desc') {
+        return parseFloat(b.price) - parseFloat(a.price);
+      }
+      return 0;
+    });
+    setFilteredPlanners(sorted);
+  };
+
+  const filterAndSortPlanners = () => {
     let filtered = planners;
 
     if (selectedCategory) {
@@ -107,6 +134,10 @@ const PlaneriPonuda = () => {
           value={searchTerm}
           onChange={handleSearchTermChange}
         />
+        <div>
+          <Button onClick={() => sortPlanners('asc')}>Cena rastuća</Button>
+          <Button onClick={() => sortPlanners('desc')}>Cena opadajuća</Button>
+        </div>
       </FilterSection>
       <PlannersSection>
         {filteredPlanners.map((planner, index) => (
