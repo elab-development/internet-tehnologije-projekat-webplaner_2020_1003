@@ -18,8 +18,10 @@ class PlanerResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'price' => $this->price,
+
             'planerType' => new PlanerTypeResource($this->planerType),
-            'user' => new UserResource($this->whenLoaded('user')),
+           
             'createdAt' => $this->created_at->format('d.m.Y.'),
             'updatedAt' => $this->updated_at->format('d.m.Y.'),
         ];

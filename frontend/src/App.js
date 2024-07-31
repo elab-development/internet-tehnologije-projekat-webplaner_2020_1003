@@ -5,6 +5,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import PlaneriPonuda from './components/PlaneriPonuda';
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
           <Route path="/" element={<Pocetna />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/planeri" element={<PlaneriPonuda />} />
+
         </Routes>
         
         <Footer />

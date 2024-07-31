@@ -22,7 +22,7 @@ use App\Http\Resources\UserCollection;
 //Auth
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-
+Route::get('/planers', [PlanerController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/search/planers', [SearchController::class, 'searchPlaners'])->middleware('checkRole:1,2');
 
     //Planers
-    Route::get('/planers', [PlanerController::class, 'index'])->middleware('checkRole:1,2');
+    
     Route::get('/planers/{id}', [PlanerController::class, 'show'])->middleware('checkRole:1');
     Route::post('/planers', [PlanerController::class, 'store'])->middleware('checkRole:1');
     Route::put('/planers/{id}', [PlanerController::class, 'update'])->middleware('checkRole:1');
