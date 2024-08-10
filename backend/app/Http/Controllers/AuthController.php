@@ -56,7 +56,9 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+        $user->tokens()->delete();
+    
         return response()->json(['message' => 'Uspešno odjavljivanje']);
     }
 }

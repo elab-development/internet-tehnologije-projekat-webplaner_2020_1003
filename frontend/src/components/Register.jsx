@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -42,7 +43,7 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-
+  const navigate= useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -61,7 +62,8 @@ const Register = () => {
       confirm_password: formData.confirmPassword
     })
     .then(response => {
-      console.log(response.data);
+      alert("USPESNO REGISTROVAN KORISNIK");
+      navigate("/login");
     })
     .catch(error => {
       console.error(error);

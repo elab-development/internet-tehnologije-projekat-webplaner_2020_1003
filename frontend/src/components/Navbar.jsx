@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const Nav = styled.nav`
   background-color: #f8f9fa;
@@ -27,19 +28,49 @@ const NavLink = styled(Link)`
   }
 `;
 
-const Navbar = () => {
+const Button = styled.button`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #CDB4DB;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const Navbar = ({ isLoggedIn, onLogout }) => {
+  const handleLogout = () => {
+  
+    sessionStorage.clear();
+    onLogout();
+  };
+
   return (
     <Nav>
       <NavList>
         <NavItem>
           <NavLink to="/">Pocetna</NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink to="/register">Registracija</NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink to="/login">Prijava</NavLink>
-        </NavItem>
+        {!isLoggedIn && (
+          <>
+            <NavItem>
+              <NavLink to="/register">Registracija</NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/login">Prijava</NavLink>
+            </NavItem>
+          </>
+        )}
+        {isLoggedIn && (
+          <>
+            <NavItem>
+              <NavLink to="/planeri">Planeri</NavLink>
+            </NavItem>
+            <NavItem>
+              <Button onClick={handleLogout}>Odjava</Button>
+            </NavItem>
+          </>
+        )}
       </NavList>
     </Nav>
   );

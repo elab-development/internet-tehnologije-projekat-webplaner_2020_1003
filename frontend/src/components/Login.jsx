@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
   display: flex;
@@ -33,12 +34,12 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'dmorissette@example.net',
+    password: 'password'
   });
-
+  let navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -54,7 +55,9 @@ const Login = () => {
       password: formData.password
     })
     .then(response => {
-      console.log(response.data);
+      const token = response.data.token;
+      onLogin(token);
+      navigate("/planeri")
     })
     .catch(error => {
       console.error(error);
