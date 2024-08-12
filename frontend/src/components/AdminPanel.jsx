@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import styled from 'styled-components';
+import Modal from 'react-modal';
 
 const AdminPanelContainer = styled.div`
   padding: 20px;
@@ -33,72 +34,91 @@ const DeleteButton = styled.button`
   }
 `;
 
+const EditButton = styled.button`
+  padding: 5px 10px;
+  background-color: #4682B4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+
+  &:hover {
+    background-color: #5A9BD3;
+  }
+`;
+
+const AddButton = styled.button`
+  padding: 10px 20px;
+  background-color: #4682B4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #5A9BD3;
+  }
+`;
+
 const StyledDataTable = styled(DataTable)`
-  .rdt_Table {
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
+  /* (CSS styling as before) */
+`;
 
-  .rdt_TableHead {
-    background-color: #CDB4DB;
-  }
+const ModalContainer = styled(Modal)`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  outline: none;
+  position: absolute;
+`;
 
-  .rdt_TableHeadRow {
-    color: white;
-  }
+const FormGroup = styled.div`
+  margin-bottom: 15px;
+`;
 
-  .rdt_TableRow {
-    &:nth-of-type(odd) {
-      background-color: #FDE2E4;
-    }
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+`;
 
-    &:nth-of-type(even) {
-      background-color: #FFCAD4;
-    }
-    
-    &:hover {
-      background-color: #FFB3C1;
-    }
-  }
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+`;
 
-  .rdt_Pagination {
-    background-color: #FFAFCC;
-    border-top: 1px solid #FFC3C8;
-    padding: 10px;
-  }
+const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+`;
 
-  .rdt_Pagination ul {
-    display: flex;
-    justify-content: center;
-    padding-left: 0;
-  }
+const SaveButton = styled.button`
+  padding: 10px 20px;
+  background-color: #4682B4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 
-  .rdt_Pagination li {
-    margin: 0 5px;
-  }
-
-  .rdt_Pagination button {
-    background-color: #4682B4;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    
-    &:hover {
-      background-color: #5A9BD3;
-    }
-
-    &[disabled] {
-      background-color: #A9A9A9;
-    }
+  &:hover {
+    background-color: #5A9BD3;
   }
 `;
 
 const AdminPanel = () => {
   const [planners, setPlanners] = useState([]);
+  const [planerTypes, setPlanerTypes] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [currentPlanner, setCurrentPlanner] = useState(null);
+  const [plannerData, setPlannerData] = useState({ name: '', description: '', price: '', planerTypeId: '' });
+
   const token = sessionStorage.getItem('token'); // Retrieve token from session storage
 
   useEffect(() => {
@@ -115,7 +135,21 @@ const AdminPanel = () => {
       }
     };
 
+    const fetchPlanerTypes = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/planer-types', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setPlanerTypes(response.data.data);
+      } catch (error) {
+        console.error('Error fetching planer types:', error);
+      }
+    };
+
     fetchPlanners();
+    fetchPlanerTypes();
   }, [token]);
 
   const handleDelete = async (id) => {
@@ -129,6 +163,51 @@ const AdminPanel = () => {
     } catch (error) {
       console.error('Error deleting planner:', error);
     }
+  };
+
+  const openModal = (planner) => {
+    setCurrentPlanner(planner);
+    setPlannerData(planner || { name: '', description: '', price: '', planerTypeId: '' });
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setCurrentPlanner(null);
+  };
+
+  const handleSave = async () => {
+    try {
+      if (currentPlanner) {
+        // Update existing planner
+        await axios.put(`http://127.0.0.1:8000/api/planers/${currentPlanner.id}`, plannerData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } else {
+        // Add new planner
+        await axios.post('http://127.0.0.1:8000/api/planers', plannerData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+      setModalIsOpen(false);
+      // Refetch planners
+      const response = await axios.get('http://127.0.0.1:8000/api/planers', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setPlanners(response.data.data);
+    } catch (error) {
+      console.error('Error saving planner:', error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setPlannerData({ ...plannerData, [e.target.name]: e.target.value });
   };
 
   const columns = [
@@ -162,7 +241,10 @@ const AdminPanel = () => {
     {
       name: 'Actions',
       cell: row => (
-        <DeleteButton onClick={() => handleDelete(row.id)}>Delete</DeleteButton>
+        <>
+          <DeleteButton onClick={() => handleDelete(row.id)}>Delete</DeleteButton>
+          <EditButton onClick={() => openModal(row)}>Edit</EditButton>
+        </>
       ),
       ignoreRowClick: true,
       allowOverflow: true,
@@ -174,6 +256,7 @@ const AdminPanel = () => {
     <AdminPanelContainer>
       <HeaderDiv>
         <span>Total Planners: {planners.length}</span>
+        <AddButton onClick={() => openModal(null)}>Add Planner</AddButton>
       </HeaderDiv>
       <StyledDataTable
         columns={columns}
@@ -182,6 +265,35 @@ const AdminPanel = () => {
         highlightOnHover
         striped
       />
+      <ModalContainer
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        ariaHideApp={false}
+      >
+        <h2>{currentPlanner ? 'Edit Planner' : 'Add Planner'}</h2>
+        <FormGroup>
+          <Label>Name</Label>
+          <Input name="name" value={plannerData.name} onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label>Description</Label>
+          <Input name="description" value={plannerData.description} onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label>Price</Label>
+          <Input name="price" value={plannerData.price} onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label>Category</Label>
+          <Select name="planerTypeId" value={plannerData.planerTypeId} onChange={handleChange}>
+            <option value="">Select Category</option>
+            {planerTypes.map((type) => (
+              <option key={type.id} value={type.id}>{type.name}</option>
+            ))}
+          </Select>
+        </FormGroup>
+        <SaveButton onClick={handleSave}>Save</SaveButton>
+      </ModalContainer>
     </AdminPanelContainer>
   );
 };
