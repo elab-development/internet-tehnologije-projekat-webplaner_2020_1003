@@ -47,6 +47,27 @@ const Button = styled.button`
   }
 `;
 
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+`;
+
+const PaginationButton = styled.button`
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: ${props => props.disabled ? '#A9A9A9' : '#4682B4'};
+  color: white;
+
+  &:hover {
+    background-color: ${props => props.disabled ? '#A9A9A9' : '#5A9BD3'};
+  }
+`;
+
 const PlaneriPonuda = () => {
   const [planners, setPlanners] = useState([]);
   const [filteredPlanners, setFilteredPlanners] = useState([]);
@@ -54,8 +75,8 @@ const PlaneriPonuda = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  
+  const [itemsPerPage] = useState(6); // Broj planera po stranici
+
   useEffect(() => {
     const fetchPlanners = async () => {
       try {
@@ -83,6 +104,10 @@ const PlaneriPonuda = () => {
   useEffect(() => {
     filterAndSortPlanners();
   }, [selectedCategory, searchTerm]);
+
+  useEffect(() => {
+    setCurrentPage(1); // Resetovanje na prvu stranicu kad se filteri menjaju
+  }, [filteredPlanners]);
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -121,6 +146,14 @@ const PlaneriPonuda = () => {
     setFilteredPlanners(filtered);
   };
 
+  const indexOfLastPlanner = currentPage * itemsPerPage;
+  const indexOfFirstPlanner = indexOfLastPlanner - itemsPerPage;
+  const currentPlanners = filteredPlanners.slice(indexOfFirstPlanner, indexOfLastPlanner);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(filteredPlanners.length / itemsPerPage);
+
   return (
     <div>
       <FilterSection>
@@ -142,10 +175,23 @@ const PlaneriPonuda = () => {
         </div>
       </FilterSection>
       <PlannersSection>
-        {filteredPlanners.map((planner, index) => (
+        {currentPlanners.map((planner, index) => (
           <PlanerKartica key={planner.id} planner={planner} index={index} />
         ))}
       </PlannersSection>
+      <PaginationContainer>
+        <PaginationButton onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
+          Prethodna
+        </PaginationButton>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <PaginationButton key={i + 1} onClick={() => paginate(i + 1)} disabled={currentPage === i + 1}>
+            {i + 1}
+          </PaginationButton>
+        ))}
+        <PaginationButton onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages}>
+          Sledeća
+        </PaginationButton>
+      </PaginationContainer>
     </div>
   );
 };
