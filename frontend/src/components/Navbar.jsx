@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
 
 const Nav = styled.nav`
   background-color: #f8f9fa;
@@ -39,9 +38,11 @@ const Button = styled.button`
 `;
 
 const Navbar = ({ isLoggedIn, onLogout }) => {
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const navigate = useNavigate();
   const handleLogout = () => {
-  
     sessionStorage.clear();
+    navigate("/")
     onLogout();
   };
 
@@ -63,9 +64,16 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         )}
         {isLoggedIn && (
           <>
-            <NavItem>
-              <NavLink to="/planeri">Planeri</NavLink>
-            </NavItem>
+            {user?.role.name === 'Admin' && (
+              <NavItem>
+                <NavLink to="/admin">Admin Panel</NavLink>
+              </NavItem>
+            )}
+            {user?.role.name === 'Customer' && (
+              <NavItem>
+                <NavLink to="/planeri">Planeri</NavLink>
+              </NavItem>
+            )}
             <NavItem>
               <Button onClick={handleLogout}>Odjava</Button>
             </NavItem>

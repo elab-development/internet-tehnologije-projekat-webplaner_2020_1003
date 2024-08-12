@@ -17,13 +17,12 @@ function App() {
     }
   }, []);
 
-  const handleLogin = (token) => {
-    sessionStorage.setItem('token', token);
+  const handleLogin = () => {
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('token');
+    sessionStorage.clear();
     setIsLoggedIn(false);
   };
 

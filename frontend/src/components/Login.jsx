@@ -40,6 +40,7 @@ const Login = ({ onLogin }) => {
     password: 'password'
   });
   let navigate = useNavigate();
+  
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -55,9 +56,17 @@ const Login = ({ onLogin }) => {
       password: formData.password
     })
     .then(response => {
-      const token = response.data.token;
-      onLogin(token);
-      navigate("/planeri")
+      const { token, data } = response.data;
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('user', JSON.stringify(data));
+      
+      if (data.role.name === 'Customer') {
+        navigate("/planeri");
+      } else if (data.role.name === 'Administrator') {
+        navigate("/admin");
+      }
+      
+      onLogin();
     })
     .catch(error => {
       console.error(error);

@@ -53,7 +53,9 @@ const PlaneriPonuda = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  
   useEffect(() => {
     const fetchPlanners = async () => {
       try {
