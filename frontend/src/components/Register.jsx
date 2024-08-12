@@ -1,5 +1,4 @@
- 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -43,7 +42,25 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const navigate= useNavigate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('https://randomuser.me/api/')
+      .then(response => {
+        const user = response.data.results[0];
+        setFormData({
+          username: user.login.username,
+          fullName: `${user.name.first} ${user.name.last}`,
+          email: user.email,
+          password: 'password', // Placeholder lozinka
+          confirmPassword: 'password'
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -54,15 +71,13 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('http://127.0.0.1:8000/api/register', {
-      username: formData.username,
-      fullName: formData.fullName,
-      email: formData.email,
-      password: formData.password,
-      confirm_password: formData.confirmPassword
+    axios.post('https://jsonplaceholder.typicode.com/posts', {
+      title: formData.username,
+      body: formData.fullName,
+      userId: 1, // Placeholder API zahteva userId, koji može biti bilo koji broj
     })
     .then(response => {
-      alert("USPESNO REGISTROVAN KORISNIK");
+      alert("USPESNO REGISTROVAN KORISNIK  ");
       navigate("/login");
     })
     .catch(error => {
