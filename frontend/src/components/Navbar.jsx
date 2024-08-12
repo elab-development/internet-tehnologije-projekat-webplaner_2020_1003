@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -40,9 +41,29 @@ const Button = styled.button`
 const Navbar = ({ isLoggedIn, onLogout }) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
   const navigate = useNavigate();
-  const handleLogout = () => {
-    sessionStorage.clear();
-    navigate("/")
+  const handleLogout = async () => {
+    const token = sessionStorage.getItem('token');
+  
+    try {
+      // Pošalji POST zahtev za logout na server
+      await axios.post('http://127.0.0.1:8000/api/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // Očisti session storage nakon uspešne odjave
+      sessionStorage.clear();
+      
+      // Navigiraj na početnu stranicu
+      navigate("/");
+      
+      // Pozovi onLogout callback funkciju
+      onLogout();
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Moguće je dodati dodatno rukovanje greškama ovde
+    }
     onLogout();
   };
 
@@ -64,10 +85,14 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         )}
         {isLoggedIn && (
           <>
-            {user?.role.name === 'Admin' && (
+            {user?.role.name === 'Administrator' && (
+              <>
               <NavItem>
                 <NavLink to="/admin">Admin Panel</NavLink>
               </NavItem>
+               <NavItem>
+                <NavLink to="/adminCategories">Admin Kategorije</NavLink>
+              </NavItem></>
             )}
             {user?.role.name === 'Customer' && (
               <NavItem>

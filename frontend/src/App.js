@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import PlaneriPonuda from './components/PlaneriPonuda';
 import AdminPanel from './components/AdminPanel';
+import AdminCategories from './components/AdminCategories';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,6 +41,8 @@ function App() {
             element={isLoggedIn ? <PlaneriPonuda /> : <Navigate to="/login" />}
           />
           <Route path="/admin" element={isLoggedIn    ? <AdminPanel /> : <Navigate to="/login" />} />
+          <Route path="/adminCategories" element={isLoggedIn    ? <AdminCategories /> : <Navigate to="/login" />} />
+
         </Routes>
         <Footer />
       </div>
