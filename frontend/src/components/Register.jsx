@@ -71,14 +71,16 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post('https://jsonplaceholder.typicode.com/posts', {
-      title: formData.username,
-      body: formData.fullName,
-      userId: 1, // Placeholder API zahteva userId, koji može biti bilo koji broj
+    axios.post('http://127.0.0.1:8000/api/register', {
+      username: formData.username,
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      confirm_password: formData.confirmPassword
     })
     .then(response => {
-      alert("USPESNO REGISTROVAN KORISNIK  ");
-      navigate("/login");
+      console.log(response.data);
+      alert("USPEH");
     })
     .catch(error => {
       console.error(error);
