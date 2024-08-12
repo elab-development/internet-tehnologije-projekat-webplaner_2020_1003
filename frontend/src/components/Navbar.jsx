@@ -73,6 +73,9 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
         <NavItem>
           <NavLink to="/">Pocetna</NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink to="/faq">FAQ</NavLink>
+        </NavItem>
         {!isLoggedIn && (
           <>
             <NavItem>

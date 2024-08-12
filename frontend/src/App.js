@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import PlaneriPonuda from './components/PlaneriPonuda';
 import AdminPanel from './components/AdminPanel';
 import AdminCategories from './components/AdminCategories';
+import FAQ from './components/FAQ';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,6 +36,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Pocetna />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/faq" element={<FAQ />} />
+
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/planeri"
