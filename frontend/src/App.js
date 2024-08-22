@@ -11,14 +11,17 @@ import AdminCategories from './components/AdminCategories';
 import FAQ from './components/FAQ';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem('token'));
 
-  useEffect(() => {
+   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
   }, []);
+  
 
   const handleLogin = () => {
     setIsLoggedIn(true);
