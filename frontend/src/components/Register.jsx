@@ -81,6 +81,7 @@ const Register = () => {
     .then(response => {
       console.log(response.data);
       alert("USPEH");
+      navigate('/login');
     })
     .catch(error => {
       console.error(error);
