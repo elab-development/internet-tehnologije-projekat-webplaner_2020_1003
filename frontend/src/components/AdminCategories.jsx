@@ -97,7 +97,7 @@ const AdminCategories = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
 
-  const token = sessionStorage.getItem('token'); // Retrieve token from session storage
+  const token = sessionStorage.getItem('token'); 
 
   useEffect(() => {
     const fetchCategories = async () => {

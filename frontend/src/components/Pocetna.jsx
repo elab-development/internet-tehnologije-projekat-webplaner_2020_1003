@@ -126,18 +126,18 @@ const Pocetna = () => {
       <PlannersSection>
         <PlannerCard index={0}>
           <PlannerImage src="https://images.squarespace-cdn.com/content/v1/5d41414f4f8c15000124126e/1722241510042-EGAPO9WJY05PD1MBH39R/image-asset.jpeg?format=750w" alt="Planner 1" />
-          <PlannerTitle>Planner 1</PlannerTitle>
-          <p>Detailed description of Planner 1.</p>
+          <PlannerTitle>MODERAN DIZAJN</PlannerTitle>
+          <p>Naši planeri spajaju savremeni izgled sa praktičnošću, omogućavajući vam da planirate svoje dane sa stilom i elegancijom.</p>
         </PlannerCard>
         <PlannerCard index={1}>
           <PlannerImage src="https://images.squarespace-cdn.com/content/v1/5d41414f4f8c15000124126e/1720870546119-0M718LOB0KOS4QYB60BN/IMG_5558.jpg?format=2500w" alt="Planner 2" />
-          <PlannerTitle>Planner 2</PlannerTitle>
-          <p>Detailed description of Planner 2.</p>
+          <PlannerTitle>NAJKVALITETNIJI MATERIJAL</PlannerTitle>
+          <p>Izrađeni od najfinijih materijala, naši planeri su robusni i dizajnirani da izdrže svakodnevnu upotrebu, pružajući vam dugotrajnu pouzdanost.</p>
         </PlannerCard>
         <PlannerCard index={2}>
           <PlannerImage src="https://images.squarespace-cdn.com/content/v1/5d41414f4f8c15000124126e/1718125343445-GBMRPXEI16ZNKNTG0DRH/BD2B14F9-DC14-4244-BFD9-71FCD2C97CC2.JPG?format=1500w" alt="Planner 3" />
-          <PlannerTitle>Planner 3</PlannerTitle>
-          <p>Detailed description of Planner 3.</p>
+          <PlannerTitle>FLEKSIBILNOST U PLANIRANJU</PlannerTitle>
+          <p>Planeri nude prilagodljive opcije koje vam omogućavaju da efikasno organizujete svoje zadatke, ciljeve i beleške, sve na jednom mestu.</p>
         </PlannerCard>
       </PlannersSection>
       <SectionsContainer>

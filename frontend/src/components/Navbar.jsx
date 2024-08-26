@@ -62,7 +62,6 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
       onLogout();
     } catch (error) {
       console.error('Error during logout:', error);
-      // Moguće je dodati dodatno rukovanje greškama ovde
     }
     onLogout();
   };
